@@ -2,8 +2,25 @@ import { Card, Skeleton } from 'antd';
 import path from 'path-browserify';
 import { useMemo } from 'react';
 
-import { SearchItem } from '../frameworks/apis/netzkino/types/searchTypes';
-import { useTMDBApiGetFindByImdbLink } from '../hooks/api/tmdbApi/useTMDBApiGetFindByImdbLink';
+import { SearchItem } from '../../frameworks/apis/netzkino/types/searchTypes';
+import { useTMDBApiGetFindByImdbLink } from '../../hooks/api/tmdbApi/useTMDBApiGetFindByImdbLink';
+
+type MovieCardPlaceHolderProps = {
+  loading?: boolean
+};
+
+export function MovieCardPlaceHolder({ loading }: MovieCardPlaceHolderProps) {
+  return (
+    <Card
+      hoverable={false}
+      cover={(
+        <Skeleton.Image active={loading} />
+      )}
+    >
+      <Card.Meta title={<Skeleton.Button active={loading} />} />
+    </Card>
+  );
+}
 
 type MovieCardProps = {
   movie: SearchItem
@@ -12,7 +29,7 @@ type MovieCardProps = {
 
 export function MovieCard({ movie, imgBasePath }: MovieCardProps) {
   const hasValidBasePath = typeof imgBasePath === 'string' && imgBasePath !== '';
-  const movieQuery = useTMDBApiGetFindByImdbLink(movie.custom_fields['IMDb-Link'][0], typeof imgBasePath === 'string' && imgBasePath !== '');
+  const movieQuery = useTMDBApiGetFindByImdbLink(movie?.custom_fields?.['IMDb-Link']?.[0]);
   const posterPath = movieQuery.data?.movie_results?.[0]?.poster_path;
 
   const hasValidPosterPath = typeof posterPath === 'string' && posterPath !== '';
@@ -43,13 +60,13 @@ export function MovieCard({ movie, imgBasePath }: MovieCardProps) {
           )
           : (
             <img
-              alt={`${movie.title} poster`}
+              alt={`${movie?.title || ''} poster`}
               src={posterUrl}
             />
           )
       )}
     >
-      <Card.Meta title={movie.title} />
+      <Card.Meta title={movie?.title || ''} />
     </Card>
   );
 }
