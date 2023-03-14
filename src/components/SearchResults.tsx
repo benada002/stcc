@@ -4,10 +4,11 @@ import {
   Row,
   Spin,
 } from 'antd';
+import LazyLoad from 'react-lazyload';
 
 import { useNetzkinoApiGetSearch } from '../hooks/api/netzkinoApi/useNetzkinoApiGetSearch';
 import { useTMDBApiGetConfiguration } from '../hooks/api/tmdbApi/useTMDBApiGetConfiguration';
-import { MovieCard } from './MovieCard';
+import { MovieCard, MovieCardPlaceHolder } from './MovieCard';
 
 type SearchResultsProps = {
   searchQuery?: string
@@ -15,10 +16,7 @@ type SearchResultsProps = {
 
 export function SearchResults({ searchQuery }: SearchResultsProps) {
   const tmdbConfigQuery = useTMDBApiGetConfiguration();
-  const searchResult = useNetzkinoApiGetSearch(
-    searchQuery as string,
-    typeof searchQuery === 'string' || searchQuery !== '',
-  );
+  const searchResult = useNetzkinoApiGetSearch(searchQuery as string);
 
   if (typeof searchQuery !== 'string' || searchQuery === '') {
     return (
@@ -55,10 +53,16 @@ export function SearchResults({ searchQuery }: SearchResultsProps) {
           md={8}
           lg={6}
         >
-          <MovieCard
-            movie={movie}
-            imgBasePath={tmdbConfigQuery.data?.images?.base_url}
-          />
+          <LazyLoad
+            once
+            resize
+            placeholder={<MovieCardPlaceHolder loading />}
+          >
+            <MovieCard
+              movie={movie}
+              imgBasePath={tmdbConfigQuery.data?.images?.base_url}
+            />
+          </LazyLoad>
         </Col>
       ))}
     </Row>
