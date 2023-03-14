@@ -6,7 +6,7 @@ import type { GetFindList } from './types/findTypes';
 import type { GetConfiguration } from './types/configurationTypes';
 import { TMDB_API_KEY, TMDB_API_PREFIX_URL } from '../../../constants';
 
-export class NetzkinoApi implements ITMDBApi {
+export class TMDBApi implements ITMDBApi {
   private apiInstance: KyInstance;
 
   constructor(apiKey?: string) {
@@ -40,4 +40,4 @@ export class NetzkinoApi implements ITMDBApi {
   }
 }
 
-export default new NetzkinoApi();
+export default new TMDBApi();

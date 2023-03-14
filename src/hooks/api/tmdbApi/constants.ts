@@ -1,1 +1,1 @@
-export const TMDB_CACHE_KEY = 'netzkino';
+export const TMDB_CACHE_KEY = 'tmdb';

@@ -1,21 +1,16 @@
-import { useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
-import { TMDB_API_KEY } from '../../../constants';
 import tmdbApiInstance from '../../../frameworks/apis/tmdb/tmdbApi';
 import { ITMDBApi } from '../../../frameworks/apis/tmdb/types/interface';
+import { TMDB_CACHE_KEY } from './constants';
+import { getLowerCaseCacheKeyFromArray } from '../../../utils/cache';
 
-const getConfiguration = (apiClassInstance: ITMDBApi) => () => apiClassInstance.getConfiguration();
+export const getConfiguration = (
+  apiClassInstance: ITMDBApi,
+) => () => apiClassInstance.getConfiguration();
 
-export const useTMDBApiGetConfiguration = () => {
-  const getFindByImdbLinkCb = useCallback(
-    getConfiguration(tmdbApiInstance),
-    [tmdbApiInstance],
-  );
-
-  return useQuery({
-    queryKey: [TMDB_API_KEY, 'getConfiguration'],
-    queryFn: getFindByImdbLinkCb,
-    cacheTime: 1000 * 60 * 60 * 24 * 2, // 2 days
-  });
-};
+export const useTMDBApiGetConfiguration = () => useQuery({
+  queryKey: [TMDB_CACHE_KEY, 'getConfiguration'],
+  queryFn: getConfiguration(tmdbApiInstance),
+  queryKeyHashFn: getLowerCaseCacheKeyFromArray,
+});
